@@ -1,7 +1,10 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
-from api.models import Movie, Tag, Genre
-from api.serializers import MovieSerializer, TagSerializer, GenreSerializer
+
+from api.filters import GenreFilter, MovieFilter, TagFilter
+from api.models import Genre, Movie, Tag
+from api.serializers import GenreSerializer, MovieSerializer, TagSerializer
+
 
 class MovieViewSet(viewsets.ModelViewSet):
     """
@@ -9,6 +12,8 @@ class MovieViewSet(viewsets.ModelViewSet):
     """
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
+    filterset_class = MovieFilter
+    ordering_fields = '__all__'
 
 
 class GenreViewSet(viewsets.ModelViewSet):
@@ -17,6 +22,7 @@ class GenreViewSet(viewsets.ModelViewSet):
     """
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
+    filterset_class = GenreFilter
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -25,3 +31,4 @@ class TagViewSet(viewsets.ModelViewSet):
     """
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    filterset_class = TagFilter

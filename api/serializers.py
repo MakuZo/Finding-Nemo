@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from api.models import Movie, Tag, Genre
+from api.models import Genre, Movie, Tag
+
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:

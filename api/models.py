@@ -1,5 +1,6 @@
-from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
+
 
 class Genre(models.Model):
     """Class representing a genre"""
@@ -28,4 +29,4 @@ class Tag(models.Model):
     tag = models.CharField(max_length=250)
 
     def __str__(self):
-        return "{self.tag} {self.movie}".format(self=self)
+        return self.tag
