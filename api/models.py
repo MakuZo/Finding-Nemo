@@ -16,6 +16,9 @@ class Movie(models.Model):
     link = models.CharField(max_length=512)
     year = models.IntegerField(null=True)
 
+    class Meta:
+        ordering = ['id']
+
     def __str__(self):
         return "{self.title} ({self.year})".format(self=self)
 
