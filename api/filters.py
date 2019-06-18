@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
 
-from api.models import Genre, Movie, Tag
+from api.models import Movie, Tag
 
 
 class MovieFilter(filters.FilterSet):
@@ -10,16 +10,4 @@ class MovieFilter(filters.FilterSet):
 
     class Meta:
         model = Movie
-        fields = "__all__"
-
-
-class TagFilter(filters.FilterSet):
-    class Meta:
-        model = Tag
-        fields = "__all__"
-
-
-class GenreFilter(filters.FilterSet):
-    class Meta:
-        model = Genre
-        fields = "__all__"
+        fields = ('tag', 'year')

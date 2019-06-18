@@ -1,9 +1,9 @@
 from rest_framework import status, views, viewsets
 from rest_framework.response import Response
 
-from api.filters import GenreFilter, MovieFilter, TagFilter
-from api.models import Genre, Movie, Tag
-from api.serializers import GenreSerializer, MovieSerializer, TagSerializer
+from api.filters import MovieFilter
+from api.models import Movie
+from api.serializers import MovieSerializer
 from api.utils import load_dataset
 
 
@@ -15,27 +15,7 @@ class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
     filterset_class = MovieFilter
-    ordering_fields = "__all__"
-
-
-class GenreViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet for managing genres
-    """
-
-    queryset = Genre.objects.all()
-    serializer_class = GenreSerializer
-    filterset_class = GenreFilter
-
-
-class TagViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet for managing tags
-    """
-
-    queryset = Tag.objects.all()
-    serializer_class = TagSerializer
-    filterset_class = TagFilter
+    ordering_fields = ('year',)
 
 
 class DbView(views.APIView):
