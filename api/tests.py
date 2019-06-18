@@ -43,10 +43,35 @@ class MovieTests(APITestCase):
 
     def test_filter_by_tag(self):
         """Ensure that movies can be filtered by tag"""
-        response = self.client.get(self.url, {"tag": ['funny', 'animation']})
+        response = self.client.get(self.url, {"tag": ["fun", "pixar"]})
         self.assertEqual(
-            response.data["results"][0]['title'],
-            Movie.objects.filter(tag__tag="funny")
-            .filter(tag__tag="animation")
-            .first().title,
+            response.data["results"][0]["title"],
+            Movie.objects.filter(tag__tag="fun")
+            .filter(tag__tag="pixar")
+            .first()
+            .title,
         )
+
+
+class DbTests(APITestCase):
+    url = reverse("db")
+
+    def test_load_small_dataset(self):
+        """Ensure that small dataset can be loaded"""
+        response = self.client.post(self.url, {"source": "ml-latest-small"})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_return_400_when_invalid_source(self):
+        """Ensure view returns HTTP400 when passing invalid dataset name"""
+        response = self.client.post(self.url, {"source": "invalid-name"})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_return_400_when_blank_source(self):
+        """Ensure view returns HTTP400 when passing blank dataset name"""
+        response = self.client.post(self.url, {"source": ""})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_return_400_when_blank_form(self):
+        """Ensure view returns HTTP400 when passing blank form"""
+        response = self.client.post(self.url, {})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
