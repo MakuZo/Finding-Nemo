@@ -19,19 +19,23 @@ ZIP_PATH = TEMP_PATH / "data.zip"
 
 def load_dataset(dataset: str):
     """Clears the database and loads a new dataset into it.
+
+    * Downloaded dataset is extracted into .temp/ directory
+    * movies.csv, ratings.csv and links.csv are merged into DataFrame
+    * Tags are inserted as last
     
     Args:
         dataset: name of movielens dataset
     """
-    call_command("flush", verbosity=0, interactive=False)  # Clears the database
+    call_command("flush", verbosity=0, interactive=False)
     try:
-        dataset_path = _download_dataset(dataset)  # Downloads datased
+        dataset_path = _download_dataset(dataset)
         _insert_movies_from_dataset(_merge_datasheets(dataset_path))
         _insert_tags_from_path(dataset_path)
     except:
         shutil.rmtree(TEMP_PATH)
         raise
-    shutil.rmtree(TEMP_PATH)  # Delete .temp directory
+    shutil.rmtree(TEMP_PATH)
 
 
 def _merge_datasheets(path: str) -> pd.DataFrame:
@@ -45,13 +49,26 @@ def _merge_datasheets(path: str) -> pd.DataFrame:
     movies_path = path / "movies.csv"
     ratings_path = path / "ratings.csv"
     links_path = path / "links.csv"
-
-    ratings = pd.read_csv(ratings_path).groupby("movieId").mean().round(1)
-    links = pd.read_csv(links_path, converters={"imdbId": lambda x: str(x)})[
-        ["movieId", "imdbId"]
-    ]
-    movies = pd.read_csv(movies_path).merge(links, how="left", on="movieId")
-    movies = movies.merge(ratings, how="left", on="movieId")
+    ratings = (
+        pd.read_csv(
+            ratings_path,
+            usecols={"movieId", "rating"},
+            dtype={"userId": int, "movieId": int, "rating": float, "timestamp": int},
+        )[["movieId", "rating"]]
+        .groupby("movieId")
+        .mean()
+        .round(1)
+    )
+    links = pd.read_csv(
+        links_path,
+        usecols=["movieId", "imdbId"],
+        dtype={"movieId": int, "imdbId": str, "tmdbId": int},
+    )[["movieId", "imdbId"]]
+    movies = (
+        pd.read_csv(movies_path)
+        .merge(links, how="left", on="movieId")
+        .merge(ratings, how="left", on="movieId")
+    )
     return movies
 
 
@@ -100,7 +117,7 @@ def _insert_movies_from_dataset(dataset: pd.DataFrame):
 
 def _insert_tags_from_path(path: str):
     """Inserts tags from dataset into database
-    
+
     Args:
         path: path to the dataset directory
     """
