@@ -6,7 +6,7 @@ from api.models import Genre, Movie, Tag
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
-        fields = '__all__'
+        fields = "__all__"
 
 
 class MovieSerializer(serializers.ModelSerializer):
@@ -16,10 +16,10 @@ class MovieSerializer(serializers.ModelSerializer):
         model = Movie
         # Fields declared specifically to keep proper order
         # when rendering response
-        fields = ('title', 'score', 'genres', 'link', 'year')
+        fields = ("title", "score", "genres", "link", "year")
 
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = '__all__'
+        fields = "__all__"
