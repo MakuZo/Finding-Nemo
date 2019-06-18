@@ -15,13 +15,26 @@ class MovieViewSet(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
     filterset_class = MovieFilter
-    ordering_fields = ('year',)
+    ordering_fields = ("year",)
+
+    def filter_queryset(self, queryset):
+        """
+        Returns filtered queryset.
+
+        Sadly django-filters doesn't support AND syntax in queries (for CharFilter)
+        so filtering by tag must be done 'manually'.
+        """
+        tags = self.request.GET.getlist("tag")
+        if tags:
+            for tag in tags:
+                queryset = queryset.filter(tag__tag=tag)
+        return super().filter_queryset(queryset)
 
 
 class DbView(views.APIView):
     """
     View to fetch and load movie lens dataset
-    
+
     * Requires 'source' parameter in body with the name of dataset
     """
 

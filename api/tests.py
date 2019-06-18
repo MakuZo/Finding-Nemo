@@ -1,8 +1,7 @@
-from django.db.models import Q
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from api.models import Movie, Tag, Genre
+from api.models import Movie
 
 
 class MovieTests(APITestCase):
@@ -44,11 +43,10 @@ class MovieTests(APITestCase):
 
     def test_filter_by_tag(self):
         """Ensure that movies can be filtered by tag"""
-        response = self.client.get(self.url, {"tag": "funny", "tag": "animation"})
+        response = self.client.get(self.url, {"tag": ['funny', 'animation']})
         self.assertEqual(
-            response.data["results"][0].title,
+            response.data["results"][0]['title'],
             Movie.objects.filter(tag__tag="funny")
             .filter(tag__tag="animation")
-            .first.title,
+            .first().title,
         )
-

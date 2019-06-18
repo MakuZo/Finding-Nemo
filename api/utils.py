@@ -57,7 +57,7 @@ def _merge_datasheets(path: str) -> pd.DataFrame:
 
 def _insert_movies_from_dataset(dataset: pd.DataFrame):
     """Inserts merged dataset into database.
-    
+
     Args:
         dataset: merged datasheets from movie lens dataset
     """
