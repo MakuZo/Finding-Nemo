@@ -21,8 +21,13 @@ class MovieViewSet(viewsets.ModelViewSet):
         """
         Returns filtered queryset.
 
-        Sadly django-filters doesn't support AND syntax in queries (for CharFilter)
-        so filtering by tag must be done 'manually'.
+        Sadly django-filters doesn't support AND syntax in queries (for CharFilter).
+
+        ModelMultipleChoiceFilter behaves buggy when e.g. filtering by one tag.
+        Also, it would require writing custom form to 'accept' invalid tag names
+        and return empty queryset.
+
+        Filtering by tag is done in a view to spare the pain.
         """
         tags = self.request.GET.getlist("tag")
         if tags:
