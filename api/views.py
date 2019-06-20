@@ -7,7 +7,7 @@ from api.serializers import MovieSerializer
 from api.utils import load_dataset
 
 
-class MovieViewSet(viewsets.ModelViewSet):
+class MovieViewSet(viewsets.ReadOnlyModelViewSet):
     """
     ViewSet for managing movies
     """
